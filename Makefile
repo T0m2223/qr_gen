@@ -20,4 +20,4 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 run: $(BUILD_DIR)/$(BIN)
-	./$(BUILD_DIR)/$(BIN) "Hello World"
+	./$(BUILD_DIR)/$(BIN) "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." "M"
