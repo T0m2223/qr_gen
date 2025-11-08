@@ -6,7 +6,8 @@
 
 #define QR_EC_BLOCK_TYPES_PER_VERSION 2
 // Total number of codewords for each QR code version (1-40)
-static const size_t qr_ec_blocks[QR_EC_LEVEL_COUNT][QR_VERSION_COUNT][QR_EC_BLOCK_TYPES_PER_VERSION] = {
+static const size_t qr_ec_blocks[QR_EC_LEVEL_COUNT][QR_VERSION_COUNT][QR_EC_BLOCK_TYPES_PER_VERSION] =
+{
     { // L
         { 1, 0 }, { 1, 0 }, { 1, 0 }, { 1, 0 }, { 1, 0 }, { 2, 0 }, { 2, 0 }, { 2, 0 }, { 2, 0 }, { 2, 2 },
         { 4, 0 }, { 2, 2 }, { 4, 0 }, { 3, 1 }, { 5, 1 }, { 5, 1 }, { 1, 5 }, { 5, 1 }, { 3, 4 }, { 3, 5 },
@@ -34,7 +35,8 @@ static const size_t qr_ec_blocks[QR_EC_LEVEL_COUNT][QR_VERSION_COUNT][QR_EC_BLOC
 };
 
 
-static const size_t qr_ec_total_codewords[QR_EC_LEVEL_COUNT][QR_VERSION_COUNT][QR_EC_BLOCK_TYPES_PER_VERSION] = {
+static const size_t qr_ec_total_codewords[QR_EC_LEVEL_COUNT][QR_VERSION_COUNT][QR_EC_BLOCK_TYPES_PER_VERSION] =
+{
     { // L
         { 26, 0 }, { 44, 0 }, { 70, 0 }, { 100, 0 }, { 134, 0 }, { 86, 0 }, { 98, 0 }, { 121, 0 }, { 149, 0 }, { 86, 87 },
         { 101, 0 }, { 116, 117 }, { 133, 0 }, { 145, 146 }, { 109, 110 }, { 122, 123 }, { 135, 136 }, { 150, 151 }, { 141, 142 }, { 135, 136 },
@@ -59,9 +61,10 @@ static const size_t qr_ec_total_codewords[QR_EC_LEVEL_COUNT][QR_VERSION_COUNT][Q
         { 46, 47 }, { 37, 0 }, { 45, 46 }, { 46, 47 }, { 45, 46 }, { 46, 47 }, { 45, 46 }, { 45, 46 }, { 45, 46 }, { 45, 46 },
         { 45, 46 }, { 45, 46 }, { 45, 46 }, { 46, 47 }, { 45, 46 }, { 45, 46 }, { 45, 46 }, { 45, 46 }, { 45, 46 }, { 45, 46 },
     }
-}
+};
 
-static const size_t qr_ec_data_codewords[QR_EC_LEVEL_COUNT][QR_VERSION_COUNT][QR_EC_BLOCK_TYPES_PER_VERSION] = {
+static const size_t qr_ec_data_codewords[QR_EC_LEVEL_COUNT][QR_VERSION_COUNT][QR_EC_BLOCK_TYPES_PER_VERSION] =
+{
     { // L
         { 19, 0 }, { 34, 0 }, { 55, 0 }, { 80, 0 }, { 108, 0 }, { 68, 0 }, { 78, 0 }, { 97, 0 }, { 116, 0 }, { 68, 69 },
         { 81, 0 }, { 92, 93 }, { 107, 0 }, { 115, 116 }, { 87, 88 }, { 98, 99 }, { 107, 108 }, { 120, 121 }, { 113, 114 }, { 107, 108 },
@@ -87,14 +90,15 @@ static const size_t qr_ec_data_codewords[QR_EC_LEVEL_COUNT][QR_VERSION_COUNT][QR
         { 15, 16 }, { 15, 16 }, { 15, 16 }, { 16, 17 }, { 15, 16 }, { 15, 16 }, { 15, 16 }, { 15, 16 }, { 15, 16 }, { 15, 16 },
     }
 };
-    
+
 
 // TODO: test for manual errors in tables
 // - qr_ec_blocks 0 => 0 in qr_ec_total_codewords and qr_ec_data_codewords
 // - qr_ec_blocks * qr_ec_total_codewords = qr_capacity_bytes
 
 
-static const size_t qr_capacity_bytes[QR_EC_LEVEL_COUNT][QR_VERSION_COUNT] = {
+static const size_t qr_capacity_bytes[QR_EC_LEVEL_COUNT][QR_VERSION_COUNT] =
+{
     { // L
         17, 32, 53, 78, 106, 134, 154, 192, 230, 271,
         321, 367, 425, 458, 520, 586, 644, 718, 792, 858,
@@ -122,18 +126,22 @@ static const size_t qr_capacity_bytes[QR_EC_LEVEL_COUNT][QR_VERSION_COUNT] = {
 };
 
 // Get number of bits needed for character count based on version
-static size_t get_char_count_bits(unsigned version) {
+static size_t get_char_count_bits(unsigned version)
+{
     if (version <= 9) return 8;    // Versions 1-9: 8 bits
     return 16;                     // Versions 10-40: 16 bits
 }
 
 // Add bits to buffer (MSB first)
-static void add_bits(uint8_t *buffer, size_t *bit_offset, unsigned value, size_t num_bits) {
-    for (size_t i = 0; i < num_bits; i++) {
+static void add_bits(uint8_t *buffer, size_t *bit_offset, unsigned value, size_t num_bits)
+{
+    for (size_t i = 0; i < num_bits; i++)
+    {
         size_t byte_pos = *bit_offset / 8;
         size_t bit_pos = 7 - (*bit_offset % 8);
-        
-        if (value & (1 << (num_bits - 1 - i))) {
+
+        if (value & (1 << (num_bits - 1 - i)))
+        {
             buffer[byte_pos] |= (1 << bit_pos);
         } else {
             buffer[byte_pos] &= ~(1 << bit_pos);
@@ -142,7 +150,8 @@ static void add_bits(uint8_t *buffer, size_t *bit_offset, unsigned value, size_t
     }
 }
 
-unsigned qr_min_version(const char *str, qr_ec_level level) {
+unsigned qr_min_version(const char *str, qr_ec_level level)
+{
     size_t str_len = strlen(str);
     size_t i;
 
@@ -151,63 +160,87 @@ unsigned qr_min_version(const char *str, qr_ec_level level) {
     return (unsigned) i + 1;
 }
 
-size_t qr_calculate_encoded_bits(const char *str, unsigned *required_version, qr_ec_level level) {
+size_t qr_calculate_encoded_bits(const char *str, unsigned *required_version, qr_ec_level level)
+{
     size_t str_len = strlen(str);
     *required_version = qr_min_version(str, level);
     size_t char_count_bits = get_char_count_bits(*required_version);
-    
+
     // Mode indicator (4) + char count + data bits + 4 (terminator)
     return 4 + char_count_bits + (str_len * 8) + 4;
 }
 
-size_t qr_encode_byte_mode(const char *str, uint8_t *buffer, size_t buffer_size, 
-                          unsigned version, qr_ec_level level) {
-    if (!str || !buffer || version < 1 || version > QR_VERSION_COUNT) {
+size_t qr_encode_byte_mode(const char *str, uint8_t *buffer, size_t buffer_size, unsigned version, qr_ec_level level)
+{
+    if (!str || !buffer || version < 1 || version > QR_VERSION_COUNT)
+    {
         return 0;
     }
+
+    (void) level;
 
     size_t str_len = strlen(str);
     size_t char_count_bits = get_char_count_bits(version);
     size_t total_bits = 4 + char_count_bits + (str_len * 8) + 4; // +4 for terminator
     size_t required_bytes = (total_bits + 7) / 8;
-    
-    if (buffer_size < required_bytes) {
+
+    if (buffer_size < required_bytes)
+    {
         return 0; // Buffer too small
     }
 
     // Clear buffer
     memset(buffer, 0, required_bytes);
-    
+
     size_t bit_offset = 0;
-    
+
     // 1. Mode indicator (0100 for byte mode)
     add_bits(buffer, &bit_offset, 0x4, 4);
-    
+
     // 2. Character count
     add_bits(buffer, &bit_offset, (unsigned)str_len, char_count_bits);
-    
+
     // 3. Data bytes
-    for (size_t i = 0; i < str_len; i++) {
+    for (size_t i = 0; i < str_len; i++)
+    {
         add_bits(buffer, &bit_offset, (unsigned char)str[i], 8);
     }
-    
+
     // 4. Terminator (up to 4 zeros)
     add_bits(buffer, &bit_offset, 0, 4);
-    
+
     // 5. Pad with zeros to make length a multiple of 8
-    while (bit_offset % 8 != 0) {
+    while (bit_offset % 8 != 0)
+    {
         add_bits(buffer, &bit_offset, 0, 1);
     }
-    
+
     // 6. Add padding bytes (0xEC, 0x11, 0xEC, 0x11, ...) if needed
     // TODO: Implement padding if needed for the specific version/level
-    
+
     return (bit_offset + 7) / 8; // Return number of bytes used
 }
 
-size_t qr_get_total_codewords(unsigned version) {
-    if (version < 1 || version > QR_VERSION_COUNT) {
+size_t qr_get_total_codewords(unsigned version)
+{
+    size_t i, res = 0;
+    if (version < 1 || version > QR_VERSION_COUNT)
+    {
         return 0; // Invalid version
     }
-    return qr_total_codewords[version - 1]; // Convert to 0-based index
+    for (i = 0; i < QR_EC_BLOCK_TYPES_PER_VERSION; ++i)
+        res += qr_ec_blocks[0][version - 1][i] * qr_ec_total_codewords[0][version - 1][i];
+    return res;
+}
+
+size_t qr_get_data_codewords(unsigned version, qr_ec_level level)
+{
+    size_t i, res = 0;
+    if (version < 1 || version > QR_VERSION_COUNT)
+    {
+        return 0; // Invalid version
+    }
+    for (i = 0; i < QR_EC_BLOCK_TYPES_PER_VERSION; ++i)
+        res += qr_ec_blocks[level][version - 1][i] * qr_ec_data_codewords[level][version - 1][i];
+    return res;
 }

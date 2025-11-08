@@ -9,14 +9,5 @@
 [ ] - matrix construction rules
 [ ] - - 21x21 + k(4x4), k in (1,40)
 [ ] - - hardcoded data maps / order ?
-[ ] - masking / brightness of image
+[x] - masking / brightness of image
 [ ] - info embeddings
-
-
-data
-+ byte data mode indicator
-+ count indicator
-+ terminator ?
-+ error correction
-x masking
-+ info

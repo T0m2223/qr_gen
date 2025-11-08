@@ -11,8 +11,7 @@ static int mask_pattern_5(size_t i, size_t j) { return ((i * j) % 2) + ((i * j) 
 static int mask_pattern_6(size_t i, size_t j) { return (((i * j) % 2) + ((i * j) % 3)) % 2 == 0; }
 static int mask_pattern_7(size_t i, size_t j) { return (((i + j) % 2) + ((i * j) % 3)) % 2 == 0; }
 
-#define MASK_PATTERN_COUNT 8
-static int (* const MASK_PREDICATES[MASK_PATTERN_COUNT])(size_t i, size_t j) =
+static int (* const MASK_PREDICATES[QR_MASK_PATTERN_COUNT])(size_t i, size_t j) =
 {
     mask_pattern_0, mask_pattern_1, mask_pattern_2, mask_pattern_3,
     mask_pattern_4, mask_pattern_5, mask_pattern_6, mask_pattern_7,
@@ -180,7 +179,7 @@ qr_mask_evaluate(const qr_code *qr)
 void
 qr_mask_apply_pattern(qr_code *qr, size_t mask_pattern)
 {
-    if (mask_pattern >= MASK_PATTERN_COUNT) return;
+    if (mask_pattern >= QR_MASK_PATTERN_COUNT) return;
 
     size_t i, j;
 
@@ -201,7 +200,7 @@ qr_mask_apply(qr_code *qr)
     int score, best_score = -1;
     size_t mask, best_mask;
 
-    for (mask = 0; mask < MASK_PATTERN_COUNT; ++mask)
+    for (mask = 0; mask < QR_MASK_PATTERN_COUNT; ++mask)
     {
         qr->mask = mask;
         qr_mask_apply_pattern(qr, mask);
