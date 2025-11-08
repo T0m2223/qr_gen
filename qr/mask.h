@@ -1,7 +1,7 @@
 #ifndef QR_MASK
 #define QR_MASK
 
-#include <qr_types.h>
+#include <qr/types.h>
 
 #define QR_MASK_PATTERN_COUNT 8
 

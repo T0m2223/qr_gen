@@ -1,6 +1,6 @@
-#include <qr_info.h>
-#include <qr_mask.h>
-#include <qr_matrix.h>
+#include <qr/info.h>
+#include <qr/mask.h>
+#include <qr/matrix.h>
 
 static int mask_pattern_0(size_t i, size_t j) { return (i + j) % 2 == 0; }
 static int mask_pattern_1(size_t i, size_t j) { (void) j; return i % 2 == 0; }

@@ -1,5 +1,5 @@
-#include "qr_enc.h"
-#include "qr_types.h"
+#include <qr/enc.h>
+#include <qr/types.h>
 #include <string.h>
 #include <stdint.h>
 #include <assert.h>

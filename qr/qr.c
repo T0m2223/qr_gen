@@ -1,7 +1,7 @@
-#include <qr_enc.h>
-#include <qr_ecc.h>
-#include <qr_matrix.h>
-#include <qr_types.h>
+#include <qr/enc.h>
+#include <qr/ecc.h>
+#include <qr/matrix.h>
+#include <qr/types.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

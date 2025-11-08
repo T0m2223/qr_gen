@@ -2,15 +2,15 @@ BIN := qr
 CFLAGS := -Wall -Wextra -Werror
 BUILD_DIR := build
 
-SRCS := $(wildcard src/*.c)
-OBJS := $(patsubst src/%.c, $(BUILD_DIR)/%.o, $(SRCS))
+SRCS := $(wildcard qr/*.c)
+OBJS := $(patsubst qr/%.c, $(BUILD_DIR)/%.o, $(SRCS))
 
 TESTFLAGS := -I.
 
 $(BUILD_DIR)/$(BIN): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
 
-$(BUILD_DIR)/%.o: src/%.c | $(BUILD_DIR)
+$(BUILD_DIR)/%.o: qr/%.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(BUILD_DIR):

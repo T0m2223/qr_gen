@@ -1,5 +1,5 @@
-#include "qr_matrix.h"
-#include "qr_types.h"
+#include "qr/matrix.h"
+#include "qr/types.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>

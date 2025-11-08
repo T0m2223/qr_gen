@@ -1,4 +1,4 @@
-#include "qr_ecc.h"
+#include <qr/ecc.h>
 #include <stdlib.h>
 #include <string.h>
 

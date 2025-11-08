@@ -1,7 +1,7 @@
 #ifndef QR_MATRIX_H
 #define QR_MATRIX_H
 
-#include <qr_types.h>
+#include <qr/types.h>
 #include <stdint.h>
 #include <stddef.h>
 

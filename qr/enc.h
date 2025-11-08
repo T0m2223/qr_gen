@@ -1,7 +1,7 @@
 #ifndef QR_ENC_H
 #define QR_ENC_H
 
-#include "qr_types.h"
+#include <qr/types.h>
 #include <stddef.h>
 #include <stdint.h>
 

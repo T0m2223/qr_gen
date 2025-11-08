@@ -1,6 +1,6 @@
-#include <qr_info.h>
-#include <qr_mask.h>
-#include <qr_matrix.h>
+#include <qr/info.h>
+#include <qr/mask.h>
+#include <qr/matrix.h>
 
 #define DATA_BITS 6
 
