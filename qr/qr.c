@@ -5,7 +5,6 @@
 #include <qr/qr.h>
 #include <assert.h>
 #include <stdlib.h>
-#include <string.h>
 
 qr_code *
 qr_create(qr_ec_level level, qr_encoding_mode mode, unsigned version)
@@ -19,8 +18,10 @@ qr_create(qr_ec_level level, qr_encoding_mode mode, unsigned version)
     qr->matrix = malloc((qr->side_length * qr->side_length) * sizeof(*qr->matrix));
 
     // TODO
-    // qr->n_data_codewords =
-    // qr->n_ec_codewords =
+    qr->n_data_codewords = 3;
+    qr->n_ec_codewords = 3;
+    //
+
     qr->data_codewords = malloc(qr->n_data_codewords * sizeof(*qr->data_codewords));
     qr->ec_codewords = malloc(qr->n_ec_codewords * sizeof(*qr->ec_codewords));
 
@@ -37,11 +38,15 @@ qr_destroy(qr_code *qr)
 }
 
 void
-qr_encode_bytes(qr_code *qr, const uint8_t *message, size_t n)
+qr_encode_bytes(qr_code *qr, const char *message, size_t n)
 {
     assert(n <= qr->n_data_codewords && "Message provided is too large");
-    memset(qr->data_codewords, 0, qr->n_data_codewords);
-    memcpy(qr->data_codewords, message, n);
+
+    size_t i;
+    for (i = 0; i < n; ++i)
+        qr->data_codewords[i] = message[i];
+    for (; i < qr->n_data_codewords; ++i)
+        qr->data_codewords[i] = 0;
 
     // 1. enc
 
