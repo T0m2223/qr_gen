@@ -125,13 +125,13 @@ feature_3_evaluation(const qr_code *qr)
                 qr_module_get(qr, j + 5, i) == QR_MODULE_LIGHT &&
                 qr_module_get(qr, j + 6, i) == QR_MODULE_DARK;
 
-            preceded_row = j >= 4 &&
+            preceded_column = j >= 4 &&
                 qr_module_get(qr, j - 0, i) == QR_MODULE_LIGHT &&
                 qr_module_get(qr, j - 1, i) == QR_MODULE_LIGHT &&
                 qr_module_get(qr, j - 2, i) == QR_MODULE_LIGHT &&
                 qr_module_get(qr, j - 3, i) == QR_MODULE_LIGHT;
 
-            followed_row = j < qr->side_length - 10 &&
+            followed_column = j < qr->side_length - 10 &&
                 qr_module_get(qr, j + 7, i) == QR_MODULE_LIGHT &&
                 qr_module_get(qr, j + 8, i) == QR_MODULE_LIGHT &&
                 qr_module_get(qr, j + 9, i) == QR_MODULE_LIGHT &&
