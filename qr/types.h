@@ -20,6 +20,8 @@ typedef enum
     QR_MODE_BYTE,
 } qr_encoding_mode;
 
+typedef uint8_t word;
+
 typedef struct
 {
     qr_ec_level level;
@@ -32,7 +34,7 @@ typedef struct
     size_t mask;
 
     size_t n_data_codewords, n_ec_codewords;
-    uint8_t *data_codewords, *ec_codewords;
+    word *data_codewords, *ec_codewords;
 } qr_code;
 
 #endif // QR_TYPES_H
