@@ -84,6 +84,14 @@ place_bit(qr_code *qr, size_t *i, size_t *j, int *left, int *up, qr_module_state
     }
 }
 
+static const size_t REMAINDER_BITS[QR_VERSION_COUNT] =
+{
+    0, 7, 7, 7, 7, 7, 0, 0, 0, 0,
+    0, 0, 0, 3, 3, 3, 3, 3, 3, 3,
+    4, 4, 4, 4, 4, 4, 4, 3, 3, 3,
+    3, 3, 3, 3, 0, 0, 0, 0, 0, 0,
+};
+
 void
 qr_place_codewords(qr_code *qr, const uint8_t *codewords, size_t n)
 {
@@ -96,4 +104,7 @@ qr_place_codewords(qr_code *qr, const uint8_t *codewords, size_t n)
     for (word = 0; word < n; ++word)
         for (bit = 7; bit < 8; --bit)
             place_bit(qr, &i, &j, &left, &up, (codewords[word] >> bit) & 1);
+
+    for (bit = 0; bit < REMAINDER_BITS[qr->version]; ++bit)
+        place_bit(qr, &i, &j, &left, &up, 0);
 }
