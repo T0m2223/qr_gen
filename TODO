@@ -12,3 +12,5 @@
 [x] - - hardcoded data maps / order ?
 [x] - masking / brightness of image
 [x] - info embeddings
+
+[ ] - matrix sanity checks
