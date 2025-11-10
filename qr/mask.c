@@ -222,5 +222,4 @@ qr_mask_apply(qr_code *qr)
 
     qr->mask = best_mask;
     qr_mask_apply_pattern(qr, best_mask);
-    qr_format_info_apply(qr);
 }
