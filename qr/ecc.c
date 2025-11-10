@@ -213,29 +213,35 @@ qr_ec_encode(qr_code *qr)
         }
     }
 
-    assert(ecc - qr->codewords == qr->codeword_count);
-    assert(data - qr->codewords == TOTAL_DATA_CODEWORD_COUNT[qr->level][qr->version]);
+    assert(ecc - qr->codewords == (long int) qr->codeword_count);
+    assert(data - qr->codewords == (long int) TOTAL_DATA_CODEWORD_COUNT[qr->level][qr->version]);
 }
 
+// TODO: check and clean up
 void
 qr_interleave_codewords(qr_code *qr)
 {
-    size_t i, block, codeword, total_block_count = 0;
-    word final_message[qr->codeword_count];
-    word *ptr = qr->codewords;
+    size_t i, block, codeword;
+    size_t words_in_column = 0, data_offset = 0, ecc_offset = 0;
+    word final_message[qr->codeword_count], *data = qr->codewords, *ecc = qr->codewords + TOTAL_DATA_CODEWORD_COUNT[qr->level][qr->version];
 
     for (i = 0; i < BLOCK_TYPES_PER_VERSION; ++i)
-        total_block_count += BLOCK_COUNT[qr->level][qr->version][i];
+        words_in_column += BLOCK_COUNT[qr->level][qr->version][i];
 
     for (i = 0; i < BLOCK_TYPES_PER_VERSION; ++i)
     {
         for (block = 0; block < BLOCK_COUNT[qr->level][qr->version][i]; ++block)
         {
             for (codeword = 0; codeword < DATA_CODEWORD_COUNT[qr->level][qr->version][i]; ++codeword)
-            {
-                final_message[(codeword * total_block_count) + block] = *(ptr++);
-            }
+                final_message[(codeword * words_in_column) + block + data_offset] = *(data++);
+
+            for (codeword = 0; codeword < TOTAL_CODEWORD_COUNT[qr->level][qr->version][i] - DATA_CODEWORD_COUNT[qr->level][qr->version][i]; ++codeword)
+                final_message[(codeword * words_in_column) + block + ecc_offset] = *(ecc++);
         }
+
+        data_offset += words_in_column * DATA_CODEWORD_COUNT[qr->level][qr->version][i];
+        data_offset += words_in_column * (TOTAL_CODEWORD_COUNT[qr->level][qr->version][i] - DATA_CODEWORD_COUNT[qr->level][qr->version][i]);
+        words_in_column -= BLOCK_COUNT[qr->level][qr->version][i];
     }
 
     for (i = 0; i < qr->codeword_count; ++i)
