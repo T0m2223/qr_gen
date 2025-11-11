@@ -1,5 +1,5 @@
 BUILD_DIR      := build
-RELEASE_DIR    := $(BUILD_DIR)/main
+RELEASE_DIR    := $(BUILD_DIR)/release
 TEST_DIR       := $(BUILD_DIR)/test
 TARGET_RELEASE := $(RELEASE_DIR)/qr
 TARGET_TEST    := $(TEST_DIR)/test

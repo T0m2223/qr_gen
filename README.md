@@ -47,12 +47,12 @@ A lightweight, C-based QR code generator that creates QR codes from text input w
 
 Generate a QR code with default error correction (L):
 ```bash
-./build/main/qr "Hello, World!"
+./build/release/qr "Hello, World!"
 ```
 
 Generate a QR code with high error correction:
 ```bash
-./build/main/qr "Important Data" H
+./build/release/qr "Important Data" H
 ```
 
 ## Running Tests
