@@ -1,9 +1,9 @@
-[ ] - data encoding
-[ ] - - byte data
-[ ] - - - mode indicator: 0100
-[ ] - - - count indicator: v1-9[8]; v10-40[16]
-[ ] - - - terminator: 0000
-[ ] - - - - optional; maybe fill remaining with 0s?
+[x] - data encoding
+[x] - - byte data
+[x] - - - mode indicator: 0100
+[x] - - - count indicator: v1-9[8]; v10-40[16]
+[x] - - - terminator: 0000
+[x] - - - - optional; maybe fill remaining with 0s?
 [x] - redundancy introduction / error correction
 [x] - - L:.07; M:.15; Q:.25; H:.3
 [x] - matrix construction rules
