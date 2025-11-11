@@ -61,7 +61,7 @@ qr_module_is_reserved(const qr_code *qr, size_t i, size_t j)
     int in_finder = in_finder_upper_left || in_finder_upper_right || in_finder_lower_left;
 
     int in_timing = i == 6 || j == 6;
-    int in_alignment = qr_is_in_alignment_patterns(qr->version, i, j);
+    int in_alignment = qr_is_in_alignment_patterns(qr, i, j);
 
     int in_version_lower_left = i < 6 && j >= qr->side_length - 11;
     int in_version_upper_right = i >= qr->side_length - 11 && j < 6;
@@ -131,13 +131,13 @@ qr_place_codewords(qr_code *qr)
     i = j = qr->side_length - 1;
 
     for (word = 0; word < qr->codeword_count; ++word)
+    {
         for (bit = 7; bit < 8; --bit)
             place_bit(qr, &i, &j, &left, &up, (qr->codewords[word] >> bit) & 1);
+    }
 
     for (bit = 0; bit < REMAINDER_BITS[qr->version]; ++bit)
         place_bit(qr, &i, &j, &left, &up, 0);
 
-    // TODO: remove
-    printf("%zu %zu %zu\n", i, j, qr->side_length - 8);
-    assert((i == qr->side_length - 8 || i == 7) && j == 1 && "Codewords not fully fill symbol");
+    assert((i == qr->side_length - 8 || i == 7) && j == 1 && "Codewords not fill symbol completely");
 }

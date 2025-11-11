@@ -1,5 +1,7 @@
 #include <qr/matrix.h>
 #include <qr/patterns.h>
+#include <qr/types.h>
+#include <stddef.h>
 
 static void
 add_finder_pattern_at(qr_code *qr, size_t i, size_t j)
@@ -83,7 +85,7 @@ static size_t ALIGNMENT_CENTER_MODULE[QR_VERSION_COUNT][MAX_ALIGNMENT_ENTRIES] =
     {   E,   E,   E,   E,   E,   E,   E },
     {   6,  18,   E,   E,   E,   E,   E },
     {   6,  22,   E,   E,   E,   E,   E },
-    {   6,  16,   E,   E,   E,   E,   E },
+    {   6,  26,   E,   E,   E,   E,   E },
     {   6,  30,   E,   E,   E,   E,   E },
     {   6,  34,   E,   E,   E,   E,   E },
     {   6,  22,  38,   E,   E,   E,   E },
@@ -148,18 +150,25 @@ qr_alignment_patterns_apply(qr_code *qr)
 }
 
 int
-qr_is_in_alignment_patterns(size_t version, size_t i_, size_t j_)
+qr_is_in_alignment_patterns(const qr_code *qr, size_t i_, size_t j_)
 {
     size_t entry_a, entry_b, i, j;
+    int in_finder_upper_left, in_finder_upper_right, in_finder_lower_left;
 
     for (entry_a = 0; entry_a < MAX_ALIGNMENT_ENTRIES; ++entry_a)
     {
         for (entry_b = 0; entry_b < MAX_ALIGNMENT_ENTRIES; ++entry_b)
         {
-            i = ALIGNMENT_CENTER_MODULE[version][entry_a] - 2;
-            j = ALIGNMENT_CENTER_MODULE[version][entry_b] - 2;
+            i = ALIGNMENT_CENTER_MODULE[qr->version][entry_a] - 2;
+            j = ALIGNMENT_CENTER_MODULE[qr->version][entry_b] - 2;
 
-            if (!i || !j) continue;
+            in_finder_upper_left = i < 8 && j < 8;
+            in_finder_upper_right = i < 8 && j >= qr->side_length - 12;
+            in_finder_lower_left = i >= qr->side_length - 12 && j < 8;
+
+            if (!i || !j || in_finder_upper_left || in_finder_upper_right || in_finder_lower_left)
+                continue;
+
             if (i_ >= i && i_ <= i + 4 && j_ >= j && j_ <= j + 4)
                 return 1;
         }
