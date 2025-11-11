@@ -28,12 +28,12 @@ A lightweight, C-based QR code generator that creates QR codes from text input w
    make
    ```
 
-   This will create the `qr` executable in the `build/main` directory.
+   This will create the `qr` executable in the `build/release` directory.
 
 ## Usage
 
 ```bash
-./build/main/qr "Your text here" [error_correction]
+./build/release/qr "Your text here" [error_correction]
 ```
 
 ### Error Correction Levels
