@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <qr/ecc.h>
 #include <qr/enc.h>
 #include <qr/info.h>
