@@ -320,7 +320,6 @@ TEST(mask_patterns)
         qr_mask_apply_pattern(&qr, pattern);
         
         // Count how many modules were toggled
-        size_t toggled = 0;
         for (size_t i = 0; i < qr.side_length; i++) {
             for (size_t j = 0; j < qr.side_length; j++) {
                 // Skip quiet zone
@@ -341,8 +340,6 @@ TEST(mask_patterns)
                     case 6: should_toggle = ((((module_i * module_j) % 2) + ((module_i * module_j) % 3)) % 2 == 0); break;
                     case 7: should_toggle = ((((module_i + module_j) % 2) + ((module_i * module_j) % 3)) % 2 == 0); break;
                 }
-                
-                if (should_toggle) toggled++;
                 
                 // The module should be toggled if the mask pattern says so
                 int expected = ((i + j) % 2) ^ should_toggle ? 1 : 0;
