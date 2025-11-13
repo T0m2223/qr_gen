@@ -1,3 +1,11 @@
+/**
+ * @file mask.c
+ * @brief Test cases for QR code masking functionality
+ * 
+ * This file contains test cases for the QR code masking functionality,
+ * including mask pattern application and evaluation.
+ */
+
 #include <test/base.h>
 #include <qr/types.h>
 #include <qr/matrix.h>
@@ -8,7 +16,16 @@
 // Include the source file directly to test static functions
 #include "../qr/mask.c"
 
-// Helper function to create a test QR code with specified size
+/**
+ * @brief Creates a test QR code with a specified size and pattern
+ * 
+ * This helper function initializes a QR code structure with a test pattern
+ * that can be used to verify mask application. The pattern is designed to
+ * produce consistent results when masked.
+ * 
+ * @param size The side length of the QR code matrix (including quiet zone)
+ * @return qr_code* Pointer to the created QR code, or NULL on failure
+ */
 static qr_code *create_test_qr(size_t size) {
     qr_code *qr = calloc(1, sizeof(qr_code));
     if (!qr) return NULL;
@@ -33,7 +50,11 @@ static qr_code *create_test_qr(size_t size) {
     return qr;
 }
 
-// Helper function to free test QR code
+/**
+ * @brief Frees resources allocated for a test QR code
+ * 
+ * @param qr Pointer to the QR code to free
+ */
 static void free_test_qr(qr_code *qr) {
     if (qr) {
         free(qr->matrix);
@@ -41,7 +62,17 @@ static void free_test_qr(qr_code *qr) {
     }
 }
 
-// Test all mask patterns with a simple pattern
+/**
+ * @brief Tests the application of all QR code mask patterns
+ * 
+ * This test verifies that each of the 8 standard QR code mask patterns
+ * is correctly applied to a test pattern. It checks that the mask patterns
+ * toggle the appropriate modules according to their respective formulas.
+ * 
+ * @return 0 on success, non-zero error code on failure
+ *         1000 + pattern_num: Mask pattern application failed
+ *         2000 + pattern_num: No modules were toggled
+ */
 TEST(mask_patterns_application)
 {
     const size_t size = 21;  // Version 1 QR code

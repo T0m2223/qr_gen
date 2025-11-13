@@ -1,3 +1,11 @@
+/**
+ * @file ecc.c
+ * @brief Test cases for Error Correction Code (ECC) functionality
+ * 
+ * This file contains test cases for the QR code error correction functionality,
+ * including Galois Field arithmetic, generator polynomial creation, and codeword interleaving.
+ */
+
 #include <test/base.h>
 #include <qr/types.h>
 #include <stdio.h>
@@ -7,8 +15,12 @@
 #include "../qr/qr.c"
 
 /**
- * Initialize the test environment.
- * Sets up the Galois Field log/antilog tables.
+ * @brief Initialize the test environment
+ * 
+ * Sets up the Galois Field log/antilog tables required for ECC calculations.
+ * This function is automatically called before each test case.
+ * 
+ * @return 0 on success, non-zero on failure
  */
 BEFORE() {
     gf_init_log_antilog();
@@ -16,8 +28,14 @@ BEFORE() {
 }
 
 /**
- * Test basic Galois Field (2^8) arithmetic operations.
- * Verifies multiplication, addition, and log/antilog table lookups.
+ * @brief Test basic Galois Field (2^8) arithmetic operations
+ * 
+ * Verifies the implementation of Galois Field (GF) arithmetic operations:
+ * - Addition (which is XOR in GF(2^8))
+ * - Multiplication using log/antilog tables
+ * - Edge cases with zero and one
+ * 
+ * @return 0 on success, non-zero error code on failure
  */
 TEST(gf_arithmetic) {
     // Test multiplication
@@ -37,8 +55,13 @@ TEST(gf_arithmetic) {
 }
 
 /**
- * Test the generator polynomial creation.
- * Verifies that the generated polynomials match expected values from the QR spec.
+ * @brief Test the generator polynomial creation
+ * 
+ * Verifies that the generator polynomial creation function produces the
+ * expected coefficients for given polynomial degrees. The generator polynomial
+ * is used in the Reed-Solomon error correction process.
+ * 
+ * @return 0 on success, non-zero error code on failure
  */
 TEST(generator_polynomial) {
     word poly[30];  // Large enough for testing
@@ -119,7 +142,10 @@ TEST(ecc_generation) {
  * - 17 ECC codewords (26 total - 9 data)
  */
 TEST(codeword_interleaving_version1_h) {
-    // Test case: Version 1-H (1 block, 9 data codewords, 17 ECC codewords)
+        // Test case for Version 1-H QR code which has:
+    // - 1 block (no interleaving needed)
+    // - 9 data codewords
+    // - 17 ECC codewords (26 total - 9 data)
     qr_code qr = {
         .level = QR_EC_LEVEL_H,
         .version = 0, // Version 1 (0-based index)
@@ -164,8 +190,9 @@ TEST(codeword_interleaving_version1_h) {
  * - Block Type 1: 1 block, 15 data codewords, 17 total codewords (2 ECC codewords)
  */
 TEST(codeword_interleaving_version8_m) {
-    // Version 8-M (version index 7, level M)
-    // Total blocks = 2 (type 0) + 2 (type 1) = 4 blocks
+        // Test case for Version 8-M QR code which has:
+    // - 2 blocks of Type 0: 38 data + 22 ECC = 60 codewords each
+    // - 2 blocks of Type 1: 39 data + 22 ECC = 61 codewords each
     // Total codewords = 2*60 + 2*61 = 242
     qr_code qr = {
         .level = QR_EC_LEVEL_M,
@@ -239,6 +266,14 @@ TEST(codeword_interleaving_version8_m) {
     return 0;
 }
 
+/**
+ * @brief Test the consistency of ECC tables
+ * 
+ * Verifies that the ECC tables (BLOCK_COUNT, TOTAL_CODEWORD_COUNT, DATA_CODEWORD_COUNT)
+ * are consistent with each other and follow the QR code specification.
+ * 
+ * @return 0 on success, non-zero error code on failure
+ */
 TEST(ecc_table_consistency) {
     for (int level = 0; level < QR_EC_LEVEL_COUNT; level++) {
         for (int version = 0; version < QR_VERSION_COUNT; version++) {
