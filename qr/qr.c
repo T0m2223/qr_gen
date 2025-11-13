@@ -93,7 +93,7 @@ qr_svg_print(qr_code *qr, FILE *stream)
         "width=\"%zu\" height=\"%zu\" viewBox=\"0 0 %zu %zu\" "
         "shape-rendering=\"crispEdges\">\n";
 
-    fprintf(stream, fmt_str, qr->side_length, qr->side_length, qr->side_length, qr->side_length);
+    fprintf(stream, fmt_str, qr->side_length + 8, qr->side_length + 8, qr->side_length + 8, qr->side_length + 8);
     fprintf(stream, "<rect width=\"100%%\" height=\"100%%\" fill=\"white\"/>\n");
 
     for (i = 0; i < qr->side_length; ++i)
@@ -101,7 +101,7 @@ qr_svg_print(qr_code *qr, FILE *stream)
         for (j = 0; j < qr->side_length; ++j)
         {
             color = qr_module_get(qr, i, j) ? "black" : "white";
-            fprintf(stream, "<rect x=\"%zu\" y=\"%zu\" width=\"%d\" height=\"%d\" fill=\"%s\"/>\n", j, i, 1, 1, color);
+            fprintf(stream, "<rect x=\"%zu\" y=\"%zu\" width=\"%d\" height=\"%d\" fill=\"%s\"/>\n", j + 4, i + 4, 1, 1, color);
         }
     }
 
