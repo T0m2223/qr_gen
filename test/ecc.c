@@ -110,6 +110,135 @@ TEST(ecc_generation) {
  * 2. BLOCK_COUNT * TOTAL_CODEWORD_COUNT matches the total codeword count
  * 3. The difference between TOTAL_CODEWORD_COUNT and DATA_CODEWORD_COUNT is consistent
  */
+/**
+ * Test the codeword interleaving functionality.
+ * Verifies that the interleaving process correctly interleaves codewords from different blocks.
+ * Using Version 1-H (version index 0, level H) which has:
+ * - 1 block (no interleaving needed)
+ * - 9 data codewords
+ * - 17 ECC codewords (26 total - 9 data)
+ */
+TEST(codeword_interleaving_version1_h) {
+    // Test case: Version 1-H (1 block, 9 data codewords, 17 ECC codewords)
+    qr_code qr = {
+        .level = QR_EC_LEVEL_H,
+        .version = 0, // Version 1 (0-based index)
+        .codeword_count = 26, // From TOTAL_CODEWORD_COUNT[H][0][0]
+        .codewords = NULL,
+        .matrix = NULL,
+        .side_length = 0,
+        .mask = 0,
+        .mode = QR_MODE_BYTE
+    };
+    
+    // Allocate and initialize test codewords
+    word *test_codewords = calloc(qr.codeword_count, sizeof(word));
+    if (!test_codewords) return 1;
+    
+    // Fill test data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
+    for (size_t i = 0; i < qr.codeword_count; i++) {
+        test_codewords[i] = (word)(i + 1);
+    }
+    
+    qr.codewords = test_codewords;
+    
+    // Perform interleaving
+    qr_interleave_codewords(&qr);
+    
+    // For Version 1-H with 1 block, the codewords should remain in the same order
+    for (size_t i = 0; i < qr.codeword_count; i++) {
+        if (qr.codewords[i] != (word)(i + 1)) {
+            free(test_codewords);
+            return 2; // Codeword at position %zu doesn't match expected value
+        }
+    }
+    
+    free(test_codewords);
+    return 0;
+}
+
+/**
+ * Test the codeword interleaving functionality with a more complex case.
+ * Using Version 2-M (version index 1, level M) which has:
+ * - Block Type 0: 2 blocks, 14 data codewords, 16 total codewords (2 ECC codewords)
+ * - Block Type 1: 1 block, 15 data codewords, 17 total codewords (2 ECC codewords)
+ */
+TEST(codeword_interleaving_version8_m) {
+    // Version 8-M (version index 7, level M)
+    // Total blocks = 2 (type 0) + 2 (type 1) = 4 blocks
+    // Total codewords = 2*60 + 2*61 = 242
+    qr_code qr = {
+        .level = QR_EC_LEVEL_M,
+        .version = 7, // Version 8 (0-based index)
+        .codeword_count = 242, // 2*60 + 2*61 = 242
+        .codewords = NULL,
+        .matrix = NULL,
+        .side_length = 0,
+        .mask = 0,
+        .mode = QR_MODE_BYTE
+    };
+    
+    // Allocate and initialize test codewords
+    word *test_codewords = calloc(qr.codeword_count, sizeof(word));
+    if (!test_codewords) return 1;
+    
+    // Fill test data:
+    // Block 0-0 (type 0, block 0): [1, 2, ..., 60] (38 data + 22 ECC)
+    // Block 0-1 (type 0, block 1): [101, 102, ..., 120] (38 data + 22 ECC)
+    // Block 1-0 (type 1, block 0): [121, 122, ..., 181] (39 data + 22 ECC)
+    // Block 1-1 (type 1, block 1): [182, 183, ..., 242] (39 data + 22 ECC)
+    
+    // Fill Block 0-0 (type 0, block 0)
+    for (size_t i = 0; i < 242; i++) {
+        test_codewords[i] = (word)(i + 1);
+    }
+    
+    qr.codewords = test_codewords;
+    
+    // Perform interleaving
+    qr_interleave_codewords(&qr);
+    
+    // Expected interleaving order:
+    // 1. Data codewords from all blocks, interleaved
+    //    - Take first data codeword from each block in order
+    //    - Block 0-0: 60 data codewords (1-60)
+    //    - Block 0-1: 60 data codewords (61-120)
+    //    - Block 1-0: 61 data codewords (121-181)
+    //    - Block 1-1: 61 data codewords (182-242)
+    // 2. Then ECC codewords from all blocks, interleaved
+    //    - Block 0-0: 22 ECC codewords (61-82)
+    //    - Block 0-1: 22 ECC codewords (83-104)
+    //    - Block 1-0: 22 ECC codewords (105-126)
+    //    - Block 1-1: 22 ECC codewords (127-148)
+    
+    // Check first data codeword from each block
+    if (qr.codewords[0] != 1) { free(test_codewords); return 2; }
+    if (qr.codewords[1] != 39) { free(test_codewords); return 3; }
+    if (qr.codewords[2] != 77) { free(test_codewords); return 4; }
+    
+    // Check second data codeword from each block
+    if (qr.codewords[3] != 116) { free(test_codewords); return 5; }
+    if (qr.codewords[4] != 2) { free(test_codewords); return 6; }
+    if (qr.codewords[5] != 40) { free(test_codewords); return 7; }
+    
+    // Check last data codeword from each block
+    if (qr.codewords[148] != 38) { free(test_codewords); return 8; }     // Last of block 0-0
+    if (qr.codewords[149] != 76) { free(test_codewords); return 9; }    // Last of block 0-1
+    if (qr.codewords[152] != 115) { free(test_codewords); return 10; }   // Last of block 1-0
+    if (qr.codewords[153] != 154) { free(test_codewords); return 11; }   // Last of block 1-0
+    
+    // Check ECC codewords
+    if (qr.codewords[154] != 155) { free(test_codewords); return 12; }    // First ECC of block 0-0
+    if (qr.codewords[155] != 177) { free(test_codewords); return 13; }   // First ECC of block 0-1
+    if (qr.codewords[156] != 199) { free(test_codewords); return 14; }   // First ECC of block 1-0
+    if (qr.codewords[157] != 221) { free(test_codewords); return 15; }    // First ECC of block 1-1
+    if (qr.codewords[158] != 156) { free(test_codewords); return 16; }   // Second ECC of block 0-0
+    if (qr.codewords[159] != 178) { free(test_codewords); return 17; }   // Second ECC of block 0-1
+    
+    free(test_codewords);
+    return 0;
+}
+
 TEST(ecc_table_consistency) {
     for (int level = 0; level < QR_EC_LEVEL_COUNT; level++) {
         for (int version = 0; version < QR_VERSION_COUNT; version++) {
