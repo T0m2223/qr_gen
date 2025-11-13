@@ -2,14 +2,29 @@
 #include <qr/matrix.h>
 #include <qr/qr.h>
 #include <qr/types.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
+
+void
+log_(const char *fmt, ...)
+#ifdef NDEBUG
+{ (void) fmt; }
+#else
+{
+    va_list args;
+    va_start(args, fmt);
+    vfprintf(stderr, fmt, args);
+    va_end(args);
+    fflush(stderr);
+}
+#endif
 
 static void
 print_usage(const char *program_name)
 {
-    fprintf(stderr, "Usage: %s <string> [error_correction]\n", program_name);
-    fprintf(stderr, "  error_correction: L (7%%), M (15%%), Q (25%%), H (30%%). Default: L\n");
+    log_("Usage: %s <string> [error_correction]\n", program_name);
+    log_("  error_correction: L (7%%), M (15%%), Q (25%%), H (30%%). Default: L\n");
 }
 
 static qr_ec_level
@@ -24,7 +39,7 @@ parse_ec_level(const char *level_str)
     case 'Q': case 'q': return QR_EC_LEVEL_Q;
     case 'H': case 'h': return QR_EC_LEVEL_H;
     default:
-        fprintf(stderr, "Warn: Invalid error correction level %s, using 'M'\n", level_str);
+        log_("Warn: Invalid error correction level %s, using 'M'\n", level_str);
         return QR_EC_LEVEL_M;
     }
 }
@@ -44,20 +59,21 @@ main(int argc, char **argv)
     unsigned version = qr_min_version(strlen(input), ec_level);
     if (version > QR_VERSION_COUNT)
     {
-        fprintf(stderr, "Error: Input too large for QR code\n");
+        log_("Error: Input too large for QR code\n");
         return 1;
     }
 
-    printf("QR Code Generation:\n");
-    printf("  Input: %s\n", input);
-    printf("  Error Correction: %s\n", (const char*[]){"L (7%)", "M (15%)", "Q (25%)", "H (30%)"}[ec_level]);
-    printf("  Version: %u\n", version + 1);
-    printf("\n");
+    log_("QR Code Generation:\n");
+    log_("  Input: %s\n", input);
+    log_("  Error Correction: %s\n", (const char*[]){"L (7%)", "M (15%)", "Q (25%)", "H (30%)"}[ec_level]);
+    log_("  Version: %u\n", version + 1);
+    log_("\n");
 
     qr_code *qr = qr_create(ec_level, QR_MODE_BYTE, version);
     qr_encode_message(qr, input);
-    printf("\n");
-    qr_matrix_print(qr);
+    log_("\n");
+    qr_matrix_print(qr, stderr);
+    qr_svg_print(qr, stdout);
     qr_destroy(qr);
 
     return 0;

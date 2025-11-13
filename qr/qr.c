@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+extern void log_(const char *fmt, ...);
+
 static const size_t CODEWORD_COUNT[QR_VERSION_COUNT] =
 {
       26,   44,   70,  100,  134,  172,  196,  242,  292,  346,
@@ -46,37 +48,62 @@ void
 qr_encode_message(qr_code *qr, const char *message)
 {
     // 1. enc
-    printf("Encoding message............"); fflush(stdout);
+    log_("Encoding message............");
     qr_encode_data(qr, message);
-    printf("OK\n");
+    log_("OK\n");
 
     // 2. ecc
-    printf("Encoding error correction..."); fflush(stdout);
+    log_("Encoding error correction...");
     qr_ec_encode(qr);
-    printf("OK\n");
+    log_("OK\n");
 
     // 3. block
-    printf("Interleaving codewords......"); fflush(stdout);
+    log_("Interleaving codewords......");
     qr_interleave_codewords(qr);
-    printf("OK\n");
+    log_("OK\n");
 
     // 4. matrix
-    printf("Generating matrix..........."); fflush(stdout);
+    log_("Generating matrix...........");
     qr_place_codewords(qr);
     qr_finder_patterns_apply(qr);
     qr_separators_apply(qr);
     qr_timing_patterns_apply(qr);
     qr_alignment_patterns_apply(qr);
-    printf("OK\n");
+    log_("OK\n");
 
     // 5. masking
-    printf("Masking....................."); fflush(stdout);
+    log_("Masking.....................");
     qr_mask_apply(qr);
-    printf("OK\n");
+    log_("OK\n");
 
     // 6. info
-    printf("Applying meta information..."); fflush(stdout);
+    log_("Applying meta information...");
     qr_format_info_apply(qr);
     qr_version_info_apply(qr);
-    printf("OK\n");
+    log_("OK\n");
+}
+
+void
+qr_svg_print(qr_code *qr, FILE *stream)
+{
+    size_t i, j;
+    char *color;
+    char *fmt_str =
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" "
+        "width=\"%zu\" height=\"%zu\" viewBox=\"0 0 %zu %zu\" "
+        "shape-rendering=\"crispEdges\">\n";
+
+    fprintf(stream, fmt_str, qr->side_length, qr->side_length, qr->side_length, qr->side_length);
+    fprintf(stream, "<rect width=\"100%%\" height=\"100%%\" fill=\"white\"/>\n");
+
+    for (i = 0; i < qr->side_length; ++i)
+    {
+        for (j = 0; j < qr->side_length; ++j)
+        {
+            color = qr_module_get(qr, i, j) ? "black" : "white";
+            fprintf(stream, "<rect x=\"%zu\" y=\"%zu\" width=\"%d\" height=\"%d\" fill=\"%s\"/>\n", j, i, 1, 1, color);
+        }
+    }
+
+    fprintf(stream, "</svg>\n");
 }

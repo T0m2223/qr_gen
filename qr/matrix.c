@@ -16,7 +16,7 @@ qr_module_set(qr_code *qr, size_t i, size_t j, qr_module_state value)
 }
 
 void
-qr_matrix_print(const qr_code *qr)
+qr_matrix_print(const qr_code *qr, FILE *stream)
 {
     size_t i, j;
 
@@ -24,30 +24,30 @@ qr_matrix_print(const qr_code *qr)
     for (i = 0; i < 4; ++i)
     {
         for (j = 0; j < qr->side_length + 8; ++j)
-            printf("\x1b[7m  \x1b[27m");
-        printf("\n");
+            fprintf(stream, "\x1b[7m  \x1b[27m");
+        fprintf(stream, "\n");
     }
 
     for (i = 0; i < qr->side_length; ++i)
     {
         // quiet zone
-        printf("\x1b[7m        \x1b[27m");
+        fprintf(stream, "\x1b[7m        \x1b[27m");
 
         for (j = 0; j < qr->side_length; ++j)
-            printf("%s", qr_module_get(qr, i, j) ? "  " : "\x1b[7m  \x1b[27m");
+            fprintf(stream, "%s", qr_module_get(qr, i, j) ? "  " : "\x1b[7m  \x1b[27m");
 
         // quiet zone
-        printf("\x1b[7m        \x1b[27m");
+        fprintf(stream, "\x1b[7m        \x1b[27m");
 
-        printf("\n");
+        fprintf(stream, "\n");
     }
 
     // quiet zone
     for (i = 0; i < 4; ++i)
     {
         for (j = 0; j < qr->side_length + 8; ++j)
-            printf("\x1b[7m  \x1b[27m");
-        printf("\n");
+            fprintf(stream, "\x1b[7m  \x1b[27m");
+        fprintf(stream, "\n");
     }
 }
 
