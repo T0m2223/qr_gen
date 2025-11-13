@@ -21,7 +21,7 @@ A lightweight, C-based QR code generator that creates QR codes from text input w
 1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd qr_gen
+   cd qr-gen
    ```
 
 2. Build the project:
