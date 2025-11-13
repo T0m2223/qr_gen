@@ -9,6 +9,7 @@ A lightweight, C-based QR code generator that creates QR codes from text input w
 - Support for multiple error correction levels (L, M, Q, H)
 - Pure C implementation with no external dependencies
 - Simple command-line interface
+- Supports standard QR code versions only (no Micro QR support)
 
 ## Prerequisites
 
