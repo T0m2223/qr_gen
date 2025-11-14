@@ -8,7 +8,7 @@ void before_register(const char *group, const char *name, int (*fn)(void));
 static int _test_## test_id(void); \
 __attribute__((constructor)) static void _testregister_## test_id(void) \
 { \
-    test_register(__FILE__, #test_id, _test_## test_id); \
+	test_register(__FILE__, #test_id, _test_## test_id); \
 } \
 static int _test_## test_id(void)
 
@@ -16,7 +16,7 @@ static int _test_## test_id(void)
 static int _before_all(void); \
 __attribute__((constructor)) static void _beforeregister(void) \
 { \
-    before_register(__FILE__, "BEFORE", _before_all); \
+	before_register(__FILE__, "BEFORE", _before_all); \
 } \
 static int _before_all(void)
 

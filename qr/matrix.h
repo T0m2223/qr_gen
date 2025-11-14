@@ -7,8 +7,8 @@
 
 typedef enum
 {
-    QR_MODULE_LIGHT = 0,
-    QR_MODULE_DARK  = 1,
+	QR_MODULE_LIGHT = 0,
+	QR_MODULE_DARK  = 1,
 } qr_module_state;
 
 qr_module_state qr_module_get(const qr_code *qr, size_t i, size_t j);
