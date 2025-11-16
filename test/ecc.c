@@ -111,7 +111,7 @@ TEST(ecc_generation) {
 	// Compare generated ECC with expected values
 	for (int i = 0; i < 10; i++) {
 		assert_equal(ecc[i], expected_ecc[i], 
-			"ECC generation mismatch at position");
+			"ECC generation mismatch");
 	}
 
 	return TEST_SUCCESS;
