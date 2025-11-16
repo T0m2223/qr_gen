@@ -40,8 +40,6 @@ static qr_code *create_test_qr(unsigned version, size_t size) {
  * 
  * Verifies that when all codeword bits are 1, all non-reserved modules
  * are set to QR_MODULE_DARK after placement.
- * 
- * @return TEST_SUCCESS on success, error message string on failure
  */
 TEST(codeword_placement) {
 	const size_t size = 21;  // Version 1 QR code
@@ -87,8 +85,6 @@ TEST(codeword_placement) {
  * @brief Test module get/set operations
  * 
  * Verifies that module states can be set and retrieved correctly.
- * 
- * @return TEST_SUCCESS on success, error message string on failure
  */
 TEST(module_get_set) {
 	const size_t size = 21;  // Version 1 QR code
@@ -116,8 +112,6 @@ TEST(module_get_set) {
  * 
  * Verifies that reserved modules (finder patterns, timing patterns, etc.)
  * are correctly identified.
- * 
- * @return TEST_SUCCESS on success, error message string on failure
  */
 TEST(reserved_module_detection) {
 	const size_t size = 21;  // Version 1 QR code
@@ -153,8 +147,6 @@ TEST(reserved_module_detection) {
  * @brief Test edge cases for module access
  * 
  * Verifies that the module access functions handle edge cases correctly.
- * 
- * @return TEST_SUCCESS on success, error message string on failure
  */
 TEST(module_edge_cases) {
 	const size_t size = 21;  // Version 1 QR code

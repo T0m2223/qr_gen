@@ -19,8 +19,6 @@
  *
  * Sets up the Galois Field log/antilog tables required for ECC calculations.
  * This function is automatically called before each test case.
- *
- * @return TEST_SUCCESS on success, error message string on failure
  */
 BEFORE() {
 	gf_init_log_antilog();
@@ -34,8 +32,6 @@ BEFORE() {
  * - Addition (which is XOR in GF(2^8))
  * - Multiplication using log/antilog tables
  * - Edge cases with zero and one
- *
- * @return TEST_SUCCESS on success, error message string on failure
  */
 TEST(gf_arithmetic) {
 	// Test multiplication
@@ -60,8 +56,6 @@ TEST(gf_arithmetic) {
  * Verifies that the generator polynomial creation function produces the
  * expected coefficients for given polynomial degrees. The generator polynomial
  * is used in the Reed-Solomon error correction process.
- *
- * @return TEST_SUCCESS on success, error message string on failure
  */
 TEST(generator_polynomial) {
 	word poly[30];  // Large enough for testing
@@ -264,8 +258,6 @@ TEST(codeword_interleaving_version8_m) {
  *
  * Verifies that the ECC tables (BLOCK_COUNT, TOTAL_CODEWORD_COUNT, DATA_CODEWORD_COUNT)
  * are consistent with each other and follow the QR code specification.
- *
- * @return TEST_SUCCESS on success, error message string on failure
  */
 TEST(ecc_table_consistency) {
 	for (int level = 0; level < QR_EC_LEVEL_COUNT; level++) {

@@ -59,8 +59,6 @@ static qr_code *create_test_qr(size_t version) {
  * This test verifies that each of the 8 standard QR code mask patterns
  * is correctly applied to a test pattern. It checks that the mask patterns
  * toggle the appropriate modules according to their respective formulas.
- *
- * @return TEST_SUCCESS on success, error message string on failure
  */
 TEST(mask_patterns_application)
 {
@@ -172,8 +170,6 @@ static int init_random_qr(qr_code *qr, size_t size, unsigned int seed) {
  * This test verifies that the mask selection algorithm consistently
  * chooses the mask pattern with the lowest penalty score across
  * multiple random patterns.
- *
- * @return TEST_SUCCESS on success, error message string on failure
  */
 TEST(mask_selection_optimality)
 {
@@ -226,8 +222,6 @@ TEST(mask_selection_optimality)
  * 2. 2x2 blocks of same color
  * 3. Specific patterns (1011101 and 000010000100001111101)
  * 4. Ratio of dark to light modules
- *
- * @return TEST_SUCCESS on success, error message string on failure
  */
 TEST(mask_evaluation_features)
 {
@@ -267,8 +261,6 @@ TEST(mask_evaluation_features)
  *
  * This test verifies that mask patterns can be correctly applied to
  * QR codes of different versions (sizes). It tests versions 1-5.
- *
- * @return TEST_SUCCESS on success, error message string on failure
  */
 TEST(mask_different_versions)
 {
@@ -338,8 +330,6 @@ TEST(mask_different_versions)
  * This test verifies that the mask selection algorithm chooses
  * appropriate patterns for specific input patterns. It uses a
  * horizontal line pattern that should be penalized by mask 1.
- *
- * @return TEST_SUCCESS on success, error message string on failure
  */
 TEST(mask_pattern_selection_known_cases)
 {
@@ -392,8 +382,6 @@ TEST(mask_pattern_selection_known_cases)
  * This test verifies that mask patterns are correctly applied and can be undone by
  * applying the same mask pattern again. It uses a checkerboard pattern to ensure
  * that the mask patterns interact with the data in a predictable way.
- *
- * @return TEST_SUCCESS on success, error message string on failure
  */
 TEST(mask_patterns)
 {
@@ -523,8 +511,6 @@ static int init_qr_from_pattern(qr_code *qr, const mask_penalty_test_case *test)
  *
  * This test verifies that the mask penalty calculation works correctly
  * by testing against known patterns with pre-calculated penalty scores.
- *
- * @return TEST_SUCCESS on success, error message string on failure
  */
 TEST(mask_penalty_calculation)
 {
@@ -639,8 +625,6 @@ TEST(mask_evaluation)
  * This test verifies that the mask selection algorithm doesn't always choose
  * the same pattern for different inputs. It creates multiple random matrices
  * and checks that at least 3 different patterns are selected across them.
- *
- * @return TEST_SUCCESS on success, error message string on failure
  */
 TEST(mask_pattern_diversity)
 {
