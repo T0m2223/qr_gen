@@ -33,8 +33,8 @@ static struct test_result __before_all(void)
 
 #define INT_MAX_CHARS 11
 
-#define TEST_SUCCESS (struct test_result){0, NULL, 0}
-#define TEST_FAILURE(message) (struct test_result){1, message, __LINE__}
+#define TEST_SUCCESS (struct test_result) {0, NULL, 0}
+#define TEST_FAILURE(message) (struct test_result) {1, message, __LINE__}
 
 #define assert_base(lhs, rhs, message, operator) \
 	do { \
@@ -46,9 +46,9 @@ static struct test_result __before_all(void)
 				strlen(message) + \
 				strlen(": %d " #operator " %d") + (2 * INT_MAX_CHARS) + 1; \
 			char *__assert_message = malloc(__assert_length); \
-			if (__assert_message == NULL) return (struct test_result){1, "assert: malloc failed", __LINE__}; \
+			if (__assert_message == NULL) return TEST_FAILURE("assert: malloc failed"); \
 			snprintf(__assert_message, __assert_length, "%s: %d " #operator " %d", message, __assert_lhs, __assert_rhs); \
-			return (struct test_result){1, __assert_message, __LINE__}; \
+			return TEST_FAILURE(__assert_message); \
 		} \
 	} while (0)
 
