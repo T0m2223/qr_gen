@@ -73,7 +73,7 @@ Generate a QR code with high error correction:
 The project includes unit tests to verify the functionality of core components. To run the tests:
 
 ```bash
-make test
+make -s test
 ```
 
 ## Project Structure
