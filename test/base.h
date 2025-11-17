@@ -53,11 +53,11 @@ void *test_malloc(size_t size);
 		} \
 	} while (0)
 
-#define assert_equal(lhs, rhs, message) assert_base(lhs, rhs, message, ==)
-#define assert_not_equal(lhs, rhs, message) assert_base(lhs, rhs, message, !=)
-#define assert_less_than(lhs, rhs, message) assert_base(lhs, rhs, message, <)
-#define assert_greater_than(lhs, rhs, message) assert_base(lhs, rhs, message, >)
-#define assert_less_than_or_equal(lhs, rhs, message) assert_base(lhs, rhs, message, <=)
-#define assert_greater_than_or_equal(lhs, rhs, message) assert_base(lhs, rhs, message, >=)
+#define assert_eq(lhs, rhs, message) assert_base(lhs, rhs, message, ==)
+#define assert_neq(lhs, rhs, message) assert_base(lhs, rhs, message, !=)
+#define assert_lt(lhs, rhs, message) assert_base(lhs, rhs, message, <)
+#define assert_gt(lhs, rhs, message) assert_base(lhs, rhs, message, >)
+#define assert_lte(lhs, rhs, message) assert_base(lhs, rhs, message, <=)
+#define assert_gte(lhs, rhs, message) assert_base(lhs, rhs, message, >=)
 
 #endif // TEST_BASE_H

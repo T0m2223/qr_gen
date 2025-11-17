@@ -35,17 +35,17 @@ BEFORE() {
  */
 TEST(gf_arithmetic) {
 	// Test multiplication
-	assert_equal(gf_mul(2, 3), 6, "Galois Field multiplication of 2 and 3");
-	assert_equal(gf_mul(0, 5), 0, "Galois Field multiplication with zero");
-	assert_equal(gf_mul(7, 1), 7, "Galois Field multiplication with one");
+	assert_eq(gf_mul(2, 3), 6, "Galois Field multiplication of 2 and 3");
+	assert_eq(gf_mul(0, 5), 0, "Galois Field multiplication with zero");
+	assert_eq(gf_mul(7, 1), 7, "Galois Field multiplication with one");
 
 	// Test addition (XOR in GF)
-	assert_equal(gf_add(5, 3), 6, "Galois Field addition of 5 and 3");
-	assert_equal(gf_add(0, 4), 4, "Galois Field addition with zero");
+	assert_eq(gf_add(5, 3), 6, "Galois Field addition of 5 and 3");
+	assert_eq(gf_add(0, 4), 4, "Galois Field addition with zero");
 
 	// Test multiplication with log/antilog tables
-	assert_equal(gf_mul(0x03, 0x0E), 18, "Galois Field multiplication of 0x03 and 0x0E");
-	assert_equal(gf_mul(0x1A, 0x0B), 254, "Galois Field multiplication of 0x1A and 0x0B");
+	assert_eq(gf_mul(0x03, 0x0E), 18, "Galois Field multiplication of 0x03 and 0x0E");
+	assert_eq(gf_mul(0x1A, 0x0B), 254, "Galois Field multiplication of 0x1A and 0x0B");
 
 	return TEST_SUCCESS;
 }
@@ -68,7 +68,7 @@ TEST(generator_polynomial) {
 	word expected5_exponents[6] = {0, 113, 164, 166, 119, 10};
 
 	for (int i = 0; i <= 5; i++) {
-		assert_equal(poly[i], gf_antilog[expected5_exponents[i]],
+		assert_eq(poly[i], gf_antilog[expected5_exponents[i]],
 			"Generator polynomial coefficient for degree 5");
 	}
 
@@ -82,7 +82,7 @@ TEST(generator_polynomial) {
 	};
 
 	for (int i = 0; i <= 16; i++) {
-		assert_equal(poly[i], gf_antilog[expected16_exponents[i]],
+		assert_eq(poly[i], gf_antilog[expected16_exponents[i]],
 			"Generator polynomial coefficient for degree 16");
 	}
 
@@ -110,7 +110,7 @@ TEST(ecc_generation) {
 
 	// Compare generated ECC with expected values
 	for (int i = 0; i < 10; i++) {
-		assert_equal(ecc[i], expected_ecc[i],
+		assert_eq(ecc[i], expected_ecc[i],
 			"ECC generation mismatch");
 	}
 
@@ -164,7 +164,7 @@ TEST(codeword_interleaving_version1_h) {
 
 	// For Version 1-H with 1 block, the codewords should remain in the same order
 	for (size_t i = 0; i < qr.codeword_count; i++) {
-		assert_equal((int) qr.codewords[i], (int) (i + 1),
+		assert_eq((int) qr.codewords[i], (int) (i + 1),
 			"Codeword order should remain unchanged for single block");
 	}
 
@@ -225,28 +225,28 @@ TEST(codeword_interleaving_version8_m) {
 	//    - Block 1-0: 22 ECC codewords (105-126)
 	//    - Block 1-1: 22 ECC codewords (127-148)
 	// Check first data codeword from each block
-	assert_equal(qr.codewords[0], 1, "Data codeword value verification");
-	assert_equal(qr.codewords[1], 39, "Data codeword value verification");
-	assert_equal(qr.codewords[2], 77, "Data codeword value verification");
+	assert_eq(qr.codewords[0], 1, "Data codeword value verification");
+	assert_eq(qr.codewords[1], 39, "Data codeword value verification");
+	assert_eq(qr.codewords[2], 77, "Data codeword value verification");
 
 	// Check second data codeword from each block
-	assert_equal(qr.codewords[3], 116, "Data codeword value verification");
-	assert_equal(qr.codewords[4], 2, "Data codeword value verification");
-	assert_equal(qr.codewords[5], 40, "Data codeword value verification");
+	assert_eq(qr.codewords[3], 116, "Data codeword value verification");
+	assert_eq(qr.codewords[4], 2, "Data codeword value verification");
+	assert_eq(qr.codewords[5], 40, "Data codeword value verification");
 
 	// Check last data codeword from each block
-	assert_equal(qr.codewords[148], 38, "Data codeword value verification");
-	assert_equal(qr.codewords[149], 76, "Data codeword value verification");
-	assert_equal(qr.codewords[152], 115, "Data codeword value verification");
-	assert_equal(qr.codewords[153], 154, "Data codeword value verification");
+	assert_eq(qr.codewords[148], 38, "Data codeword value verification");
+	assert_eq(qr.codewords[149], 76, "Data codeword value verification");
+	assert_eq(qr.codewords[152], 115, "Data codeword value verification");
+	assert_eq(qr.codewords[153], 154, "Data codeword value verification");
 
 	// Check ECC codewords
-	assert_equal(qr.codewords[154], 155, "ECC codeword value verification");
-	assert_equal(qr.codewords[155], 177, "ECC codeword value verification");
-	assert_equal(qr.codewords[156], 199, "ECC codeword value verification");
-	assert_equal(qr.codewords[157], 221, "ECC codeword value verification");
-	assert_equal(qr.codewords[158], 156, "ECC codeword value verification");
-	assert_equal(qr.codewords[159], 178, "ECC codeword value verification");
+	assert_eq(qr.codewords[154], 155, "ECC codeword value verification");
+	assert_eq(qr.codewords[155], 177, "ECC codeword value verification");
+	assert_eq(qr.codewords[156], 199, "ECC codeword value verification");
+	assert_eq(qr.codewords[157], 221, "ECC codeword value verification");
+	assert_eq(qr.codewords[158], 156, "ECC codeword value verification");
+	assert_eq(qr.codewords[159], 178, "ECC codeword value verification");
 
 	return TEST_SUCCESS;
 }
@@ -271,13 +271,13 @@ TEST(ecc_table_consistency) {
 
 				// Test 1: If block_count is 0, both total_cw and data_cw should be 0
 				if (block_count == 0) {
-					assert_equal(total_cw, 0, "Total codewords count when block count is 0");
-					assert_equal(data_cw, 0, "Data codewords count when block count is 0");
+					assert_eq(total_cw, 0, "Total codewords count when block count is 0");
+					assert_eq(data_cw, 0, "Data codewords count when block count is 0");
 					continue;
 				}
 
 				// Test 2: total_cw should be >= data_cw
-				assert_greater_than_or_equal(total_cw, data_cw,
+				assert_gte(total_cw, data_cw,
 					"Total codewords should be >= data codewords");
 
 				total_codewords += block_count * total_cw;
@@ -285,11 +285,11 @@ TEST(ecc_table_consistency) {
 			}
 
 			// Test 3: Total data codewords should match the precomputed value
-			assert_equal(total_data_codewords, TOTAL_DATA_CODEWORD_COUNT[level][version],
+			assert_eq(total_data_codewords, TOTAL_DATA_CODEWORD_COUNT[level][version],
 				"Total data codewords should match precomputed value");
 
 			// Test 4: Total codewords should match the version's capacity
-			assert_equal(total_codewords, CODEWORD_COUNT[version],
+			assert_eq(total_codewords, CODEWORD_COUNT[version],
 				"Total codewords should match version capacity");
 		}
 	}

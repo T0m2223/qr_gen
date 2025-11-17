@@ -79,7 +79,7 @@ TEST(mask_patterns_application)
 				// Skip reserved modules (finders, timing, alignment, etc.)
 				if (qr_module_is_reserved(qr, i, j)) {
 					// Verify reserved modules were not modified
-					assert_equal(original[i * qr->side_length + j], qr->matrix[i * qr->side_length + j],
+					assert_eq(original[i * qr->side_length + j], qr->matrix[i * qr->side_length + j],
 						"Reserved module should not be modified by mask pattern");
 					continue;
 				}
@@ -101,7 +101,7 @@ TEST(mask_patterns_application)
 				int original_value = original[i * qr->side_length + j];
 				int expected_value = should_toggle ? !original_value : original_value;
 
-				assert_equal(qr->matrix[i * qr->side_length + j], expected_value,
+				assert_eq(qr->matrix[i * qr->side_length + j], expected_value,
 					"Mask pattern should toggle modules according to formula");
 
 				if (should_toggle) toggled++;
@@ -109,7 +109,7 @@ TEST(mask_patterns_application)
 		}
 
 		// Make sure at least some modules were toggled
-		assert_greater_than(toggled, 0, "Mask pattern should toggle at least some modules");
+		assert_gt(toggled, 0, "Mask pattern should toggle at least some modules");
 
 		// Reset for next pattern
 		memcpy(qr->matrix, original, qr->side_length * qr->side_length * sizeof(int));
@@ -199,7 +199,7 @@ TEST(mask_selection_optimality)
 
 		// Verify that the selected pattern has the lowest score
 		for (int pattern = 0; pattern < QR_MASK_PATTERN_COUNT; pattern++) {
-			assert_greater_than_or_equal(pattern_scores[pattern], best_score,
+			assert_gte(pattern_scores[pattern], best_score,
 				"Selected pattern should have the lowest penalty score");
 		}
 	}
@@ -222,27 +222,27 @@ TEST(mask_evaluation_features)
 
 	// Test feature 1: Adjacent modules in row/column
 	int score1 = feature_1_evaluation(qr);
-	assert_greater_than_or_equal(score1, 0,
+	assert_gte(score1, 0,
 		"Feature 1 evaluation should return non-negative score");
 
 	// Test feature 2: 2x2 blocks of same color
 	int score2 = feature_2_evaluation(qr);
-	assert_greater_than_or_equal(score2, 0,
+	assert_gte(score2, 0,
 		"Feature 2 evaluation should return non-negative score");
 
 	// Test feature 3: Specific patterns (1011101 and 000010000100001111101)
 	int score3 = feature_3_evaluation(qr);
-	assert_greater_than_or_equal(score3, 0,
+	assert_gte(score3, 0,
 		"Feature 3 evaluation should return non-negative score");
 
 	// Test feature 4: Ratio of dark to light modules
 	int score4 = feature_4_evaluation(qr);
-	assert_greater_than_or_equal(score4, 0,
+	assert_gte(score4, 0,
 		"Feature 4 evaluation should return non-negative score");
 
 	// Test overall evaluation
 	int total_score = qr_mask_evaluate(qr);
-	assert_greater_than_or_equal(total_score, 0,
+	assert_gte(total_score, 0,
 		"Overall mask evaluation should return non-negative score");
 
 	return TEST_SUCCESS;
@@ -297,13 +297,13 @@ TEST(mask_different_versions)
 		}
 
 		// Verify that the mask pattern actually changed some modules
-		assert_greater_than(toggled, 0, "Mask pattern should toggle at least some modules");
+		assert_gt(toggled, 0, "Mask pattern should toggle at least some modules");
 
 		// Verify that reserved modules were not modified
 		for (size_t row = 0; row < qr->side_length; row++) {
 			for (size_t col = 0; col < qr->side_length; col++) {
 				if (qr_module_is_reserved(qr, row, col)) {
-					assert_equal(qr->matrix[row * qr->side_length + col],
+					assert_eq(qr->matrix[row * qr->side_length + col],
 						original[row * qr->side_length + col],
 						"Reserved module should not be modified by mask pattern");
 				}
@@ -358,7 +358,7 @@ TEST(mask_pattern_selection_known_cases)
 	}
 
 	// Mask 1 creates horizontal lines, which would be bad for this pattern
-	assert_not_equal(best_pattern, 1,
+	assert_neq(best_pattern, 1,
 		"Mask 1 should not be selected for horizontal line pattern");
 
 	return TEST_SUCCESS;
@@ -402,7 +402,7 @@ TEST(mask_patterns)
 			for (size_t j = 0; j < qr->side_length; j++) {
 				// Skip reserved modules - they shouldn't be modified
 				if (qr_module_is_reserved(qr, i, j)) {
-					assert_equal(qr->matrix[i * qr->side_length + j], original[i * qr->side_length + j],
+					assert_eq(qr->matrix[i * qr->side_length + j], original[i * qr->side_length + j],
 						"Reserved module was modified by mask pattern");
 					continue;
 				}
@@ -422,7 +422,7 @@ TEST(mask_patterns)
 
 				// The module should be toggled if the mask pattern says so
 				int expected = original[i * qr->side_length + j] ^ should_toggle;
-				assert_equal(qr->matrix[i * qr->side_length + j], expected,
+				assert_eq(qr->matrix[i * qr->side_length + j], expected,
 					"Mask pattern should toggle modules according to formula");
 			}
 		}
@@ -433,7 +433,7 @@ TEST(mask_patterns)
 		// Verify we're back to the original pattern
 		for (size_t i = 0; i < qr->side_length; i++) {
 			for (size_t j = 0; j < qr->side_length; j++) {
-				assert_equal(qr->matrix[i * qr->side_length + j], original[i * qr->side_length + j],
+				assert_eq(qr->matrix[i * qr->side_length + j], original[i * qr->side_length + j],
 					"Double mask application didn't return to original");
 			}
 		}
@@ -550,7 +550,7 @@ TEST(mask_penalty_calculation)
 
 			// Verify the score matches expected
 			if (test->expected_scores[pattern] != -1)  // -1 means skip this check
-				assert_equal(score, test->expected_scores[pattern],
+				assert_eq(score, test->expected_scores[pattern],
 					"Penalty score mismatch");
 
 			// Undo the mask for the next test
@@ -584,7 +584,7 @@ TEST(mask_evaluation)
 	}
 
 	int score = qr_mask_evaluate(&qr);
-	assert_greater_than(score, 0, "Should detect consecutive modules in row/column");
+	assert_gt(score, 0, "Should detect consecutive modules in row/column");
 
 	// Clear the matrix
 	memset(qr.matrix, 0, qr.side_length * qr.side_length * sizeof(int));
@@ -599,7 +599,7 @@ TEST(mask_evaluation)
 	qr.matrix[(base_i + 1) * qr.side_length + base_j + 1] = 1;
 
 	score = qr_mask_evaluate(&qr);
-	assert_greater_than(score, 0, "Should detect 2x2 block of same modules");
+	assert_gt(score, 0, "Should detect 2x2 block of same modules");
 
 	return TEST_SUCCESS;
 }
@@ -641,7 +641,7 @@ TEST(mask_pattern_diversity)
 	}
 
 	// Verify we have sufficient pattern diversity
-	assert_greater_than_or_equal(unique_patterns, min_unique_patterns,
+	assert_gte(unique_patterns, min_unique_patterns,
 		"Insufficient pattern diversity");
 
 	return TEST_SUCCESS;
