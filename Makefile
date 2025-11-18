@@ -32,7 +32,7 @@ $(TEST_DIR)/%.o: test/%.c | $(TEST_DIR)
 $(BUILD_DIR) $(RELEASE_DIR) $(TEST_DIR):
 	mkdir -p $@
 
-.PHONY: clean run test
+.PHONY: all clean run test
 
 clean:
 	rm -rf $(BUILD_DIR) $(RELEASE_DIR) $(TEST_DIR)
