@@ -26,98 +26,6 @@ BEFORE() {
 }
 
 /**
- * @brief Integration test for qr_ec_encode
- *
- * Ensures the helper correctly processes a single block for Version 9-M and
- * writes the chosen ECC bytes immediately after the data codewords.
- */
-TEST(qr_ec_encode_version9_m) {
-	qr_code qr = {
-		.level = QR_EC_LEVEL_M,
-		.version = 8,
-		.mode = QR_MODE_BYTE,
-		.matrix = NULL,
-		.side_length = 0,
-		.mask = 0
-	};
-
-	const size_t data_count = TOTAL_DATA_CODEWORD_COUNT[QR_EC_LEVEL_M][8];
-	const size_t total_cw = CODEWORD_COUNT[8];
-	const size_t ecc_length = total_cw - data_count;
-	word codewords[total_cw];
-
-	for (size_t i = 0; i < data_count; ++i)
-		codewords[i] = (word) ((i * 3 + 11) % 256);
-
-	qr.codeword_count = total_cw;
-	qr.codewords = codewords;
-
-	assert_eq(ecc_length, 110, "ECC length mismatch");
-	word expected_ecc[] = {
-		245, 121, 89, 42, 56, 51, 80, 31, 34, 6,
-		243, 58, 171, 209, 46, 130, 106, 40, 112, 46,
-		180, 40, 74, 135, 42, 23, 111, 54, 210, 161,
-		153, 136, 202, 233, 129, 243, 46, 21, 95, 45,
-		68, 133, 197, 103, 71, 14, 63, 58, 221, 225,
-		230, 210, 30, 138, 19, 133, 47, 135, 26, 148,
-		91, 129, 144, 112, 183, 173, 177, 150, 199, 45,
-		176, 197, 180, 45, 54, 150, 141, 83, 222, 236,
-		208, 167, 126, 21, 92, 102, 211, 243, 16, 237,
-		26, 135, 99, 215, 36, 93, 95, 254, 118, 59,
-		166, 41, 207, 255, 12, 246, 195, 228, 204, 153,
-	};
-
-	qr_ec_encode(&qr);
-
-	for (size_t i = 0; i < ecc_length; ++i) {
-		assert_eq(codewords[data_count + i], expected_ecc[i],
-			"qr_ec_encode produced unexpected ECC bytes");
-	}
-
-	return TEST_SUCCESS;
-}
-
-/**
- * @brief Integration test for qr_ec_encode
- *
- * Ensures the helper correctly processes a single block for Version 1-L and
- * writes the chosen ECC bytes immediately after the data codewords.
- */
-TEST(qr_ec_encode_version1_l) {
-	qr_code qr = {
-		.level = QR_EC_LEVEL_L,
-		.version = 0,
-		.mode = QR_MODE_BYTE,
-		.matrix = NULL,
-		.side_length = 0,
-		.mask = 0
-	};
-
-	const size_t data_count = TOTAL_DATA_CODEWORD_COUNT[QR_EC_LEVEL_L][0];
-	const size_t total_cw = CODEWORD_COUNT[0];
-	const size_t ecc_length = total_cw - data_count;
-	word codewords[total_cw];
-
-	for (size_t i = 0; i < data_count; ++i)
-		codewords[i] = (word) ((i * 5 + 7) % 256);
-
-	qr.codeword_count = total_cw;
-	qr.codewords = codewords;
-
-	assert_eq(ecc_length, 7, "ECC length mismatch");
-	word expected_ecc[] = {79, 91, 164, 37, 5, 243, 57};
-
-	qr_ec_encode(&qr);
-
-	for (size_t i = 0; i < ecc_length; ++i) {
-		assert_eq(codewords[data_count + i], expected_ecc[i],
-			"qr_ec_encode produced unexpected ECC bytes");
-	}
-
-	return TEST_SUCCESS;
-}
-
-/**
  * @brief Test basic Galois Field (2^8) arithmetic operations
  *
  * Verifies the implementation of Galois Field (GF) arithmetic operations:
@@ -204,6 +112,100 @@ TEST(ecc_generation) {
 	for (int i = 0; i < 10; i++) {
 		assert_eq(ecc[i], expected_ecc[i],
 			"ECC generation mismatch");
+	}
+
+	return TEST_SUCCESS;
+}
+
+/**
+ * @brief Integration test for qr_ec_encode
+ *
+ * Ensures the helper correctly processes a single block for Version 1-L and
+ * writes the chosen ECC bytes immediately after the data codewords.
+ * Tests single block ec encoding.
+ */
+TEST(qr_ec_encode_version1_l) {
+	qr_code qr = {
+		.level = QR_EC_LEVEL_L,
+		.version = 0,
+		.mode = QR_MODE_BYTE,
+		.matrix = NULL,
+		.side_length = 0,
+		.mask = 0
+	};
+
+	const size_t data_count = TOTAL_DATA_CODEWORD_COUNT[QR_EC_LEVEL_L][0];
+	const size_t total_cw = CODEWORD_COUNT[0];
+	const size_t ecc_length = total_cw - data_count;
+	word codewords[total_cw];
+
+	for (size_t i = 0; i < data_count; ++i)
+		codewords[i] = (word) ((i * 5 + 7) % 256);
+
+	qr.codeword_count = total_cw;
+	qr.codewords = codewords;
+
+	assert_eq(ecc_length, 7, "ECC length mismatch");
+	word expected_ecc[] = {79, 91, 164, 37, 5, 243, 57};
+
+	qr_ec_encode(&qr);
+
+	for (size_t i = 0; i < ecc_length; ++i) {
+		assert_eq(codewords[data_count + i], expected_ecc[i],
+			"qr_ec_encode produced unexpected ECC bytes");
+	}
+
+	return TEST_SUCCESS;
+}
+
+/**
+ * @brief Integration test for qr_ec_encode
+ *
+ * Ensures the helper correctly processes a single block for Version 9-M and
+ * writes the chosen ECC bytes immediately after the data codewords.
+ * Tests multi-block ec encoding.
+ */
+TEST(qr_ec_encode_version9_m) {
+	qr_code qr = {
+		.level = QR_EC_LEVEL_M,
+		.version = 8,
+		.mode = QR_MODE_BYTE,
+		.matrix = NULL,
+		.side_length = 0,
+		.mask = 0
+	};
+
+	const size_t data_count = TOTAL_DATA_CODEWORD_COUNT[QR_EC_LEVEL_M][8];
+	const size_t total_cw = CODEWORD_COUNT[8];
+	const size_t ecc_length = total_cw - data_count;
+	word codewords[total_cw];
+
+	for (size_t i = 0; i < data_count; ++i)
+		codewords[i] = (word) ((i * 3 + 11) % 256);
+
+	qr.codeword_count = total_cw;
+	qr.codewords = codewords;
+
+	assert_eq(ecc_length, 110, "ECC length mismatch");
+	word expected_ecc[] = {
+		245, 121, 89, 42, 56, 51, 80, 31, 34, 6,
+		243, 58, 171, 209, 46, 130, 106, 40, 112, 46,
+		180, 40, 74, 135, 42, 23, 111, 54, 210, 161,
+		153, 136, 202, 233, 129, 243, 46, 21, 95, 45,
+		68, 133, 197, 103, 71, 14, 63, 58, 221, 225,
+		230, 210, 30, 138, 19, 133, 47, 135, 26, 148,
+		91, 129, 144, 112, 183, 173, 177, 150, 199, 45,
+		176, 197, 180, 45, 54, 150, 141, 83, 222, 236,
+		208, 167, 126, 21, 92, 102, 211, 243, 16, 237,
+		26, 135, 99, 215, 36, 93, 95, 254, 118, 59,
+		166, 41, 207, 255, 12, 246, 195, 228, 204, 153,
+	};
+
+	qr_ec_encode(&qr);
+
+	for (size_t i = 0; i < ecc_length; ++i) {
+		assert_eq(codewords[data_count + i], expected_ecc[i],
+			"qr_ec_encode produced unexpected ECC bytes");
 	}
 
 	return TEST_SUCCESS;
