@@ -15,5 +15,12 @@ jobs:
     - name: build release
       run: make
 
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+
     - name: run tests
       run: make test
