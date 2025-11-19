@@ -47,9 +47,9 @@ gf_add(word a, word b)
 static void
 generator_polynomial(word *poly, size_t degree)
 {
-	size_t i, j;
-
 	if (degree == 0) return;
+
+	size_t i, j;
 
 	for (i = 0; i < degree - 1; ++i)
 		poly[i] = 0;
