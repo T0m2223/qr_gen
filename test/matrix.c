@@ -67,11 +67,11 @@ TEST(codeword_placement) {
 		for (size_t j = 0; j < size; j++) {
 			if (qr_module_is_reserved(qr, i, j)) {
 				// Reserved modules should remain QR_MODULE_LIGHT (0)
-				assert_eq(qr_module_get(qr, i, j), QR_MODULE_LIGHT,
+				test_expect_eq(qr_module_get(qr, i, j), QR_MODULE_LIGHT,
 					"Reserved module should remain light");
 			} else {
 				// Non-reserved modules should be QR_MODULE_DARK (1)
-				assert_eq(qr_module_get(qr, i, j), QR_MODULE_DARK,
+				test_expect_eq(qr_module_get(qr, i, j), QR_MODULE_DARK,
 					"Non-reserved module should be set to dark");
 			}
 		}
@@ -98,7 +98,7 @@ TEST(module_get_set) {
 			qr_module_set(qr, i, j, expected);
 			qr_module_state actual = qr_module_get(qr, i, j);
 
-			assert_eq(actual, expected,
+			test_expect_eq(actual, expected,
 				"Module state should match expected value");
 		}
 	}
@@ -120,23 +120,23 @@ TEST(reserved_module_detection) {
 	// Test finder pattern positions (top-left corner)
 	for (int i = 0; i < 7; i++) {
 		for (int j = 0; j < 7; j++) {
-			assert_eq(qr_module_is_reserved(qr, i, j), 1,
+			test_expect_eq(qr_module_is_reserved(qr, i, j), 1,
 				"Finder pattern position should be reserved");
 		}
 	}
 
 	// Test timing pattern (row 6, columns 8-12)
 	for (int j = 8; j < 13; j++) {
-		assert_eq(qr_module_is_reserved(qr, 6, j), 1,
+		test_expect_eq(qr_module_is_reserved(qr, 6, j), 1,
 			"Timing pattern position should be reserved");
 	}
 
 	// Test format information (top-left corner)
-	assert_eq(qr_module_is_reserved(qr, 8, 8), 1,
+	test_expect_eq(qr_module_is_reserved(qr, 8, 8), 1,
 		"Format information module should be reserved");
 
 	// Test non-reserved area (outside finder patterns and timing patterns)
-	assert_eq(qr_module_is_reserved(qr, 9, 8), 0,
+	test_expect_eq(qr_module_is_reserved(qr, 9, 8), 0,
 		"Data module should not be reserved");
 
 	return TEST_SUCCESS;
@@ -154,7 +154,7 @@ TEST(module_edge_cases) {
 
 	// Test setting and getting the last module
 	qr_module_set(qr, size-1, size-1, QR_MODULE_DARK);
-	assert_eq(qr_module_get(qr, size-1, size-1), QR_MODULE_DARK,
+	test_expect_eq(qr_module_get(qr, size-1, size-1), QR_MODULE_DARK,
 		"Last module should be set to dark");
 
 	return TEST_SUCCESS;

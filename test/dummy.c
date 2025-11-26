@@ -6,6 +6,6 @@
  */
 TEST(sanity_addition)
 {
-	assert_eq(3 + 4, 7, "Basic addition failed");
+	test_expect_eq(3 + 4, 7, "Basic addition failed");
 	return TEST_SUCCESS;
 }
