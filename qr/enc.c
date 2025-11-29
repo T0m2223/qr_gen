@@ -100,5 +100,9 @@ qr_encode_data(qr_code *qr, const char *message)
 			append_bit(qr->codewords, &byte, &bit, 0);
 		for (i = 0; i < CAPACITY_BYTES[qr->level][qr->version] - length; ++i)
 			append_byte(qr->codewords, &byte, &bit, i % 2 == 0 ? 0xEC : 0x11);
+		break;
+
+	default:
+		assert(0 && "Specified encoding mode is not implemented");
 	}
 }
