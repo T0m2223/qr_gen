@@ -228,11 +228,11 @@ static word *
 interleave_words(const size_t codeword_count[BLOCK_TYPES_PER_VERSION], const size_t block_count[BLOCK_TYPES_PER_VERSION], word *in, word *out)
 {
 	size_t i, block, codeword;
-	size_t block_offsets[BLOCK_TYPES_PER_VERSION], max_codeword_count = 0;
+	size_t block_offset[BLOCK_TYPES_PER_VERSION], max_codeword_count = 0;
 
 	for (i = 0; i < BLOCK_TYPES_PER_VERSION; ++i)
 	{
-		block_offsets[i] = i ? block_offsets[i - 1] + (codeword_count[i - 1] * block_count[i - 1]) : 0;
+		block_offset[i] = i ? block_offset[i - 1] + (codeword_count[i - 1] * block_count[i - 1]) : 0;
 		if (codeword_count[i] > max_codeword_count)
 			max_codeword_count = codeword_count[i];
 	}
@@ -244,7 +244,7 @@ interleave_words(const size_t codeword_count[BLOCK_TYPES_PER_VERSION], const siz
 			if (codeword >= codeword_count[i]) continue;
 
 			for (block = 0; block < block_count[i]; ++block)
-				*(out++) = in[(block * codeword_count[i]) + codeword + block_offsets[i]];
+				*(out++) = in[(block * codeword_count[i]) + codeword + block_offset[i]];
 		}
 	}
 
