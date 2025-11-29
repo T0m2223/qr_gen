@@ -523,7 +523,7 @@ TEST(mask_penalty_calculation)
 				"100000100110010111000\n"
 				"111111100001001110110",
 			.size = 21,
-			.expected_scores = {342, 632, 315, 326, 496, 411, 537, 341}  // TODO: Fill in expected scores
+			.expected_scores = {342, 632, 315, 326, 496, 411, 537, 341}
 		},
 		// Add more test cases here
 	};
