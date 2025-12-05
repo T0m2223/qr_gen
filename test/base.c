@@ -106,7 +106,7 @@ group_exists(group_node **head, const char *name)
 }
 
 void
-test_register(const char *group_name, const char *test_name, struct test_result (*fn)(void))
+test_register_case(const char *group_name, const char *test_name, struct test_result (*fn)(void))
 {
 	group_node *group;
 
@@ -118,7 +118,7 @@ test_register(const char *group_name, const char *test_name, struct test_result 
 }
 
 void
-before_register(const char *group_name, const char *test_name, struct test_result (*fn)(void))
+test_register_setup(const char *group_name, const char *test_name, struct test_result (*fn)(void))
 {
 	group_node *group;
 

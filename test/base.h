@@ -11,27 +11,27 @@ struct test_result
 	const char *message;
 	size_t line;
 };
-void test_register(const char *group, const char *name, struct test_result (*fn)(void));
-void before_register(const char *group, const char *name, struct test_result (*fn)(void));
+void test_register_case(const char *group, const char *name, struct test_result (*fn)(void));
+void test_register_setup(const char *group, const char *name, struct test_result (*fn)(void));
 
 #define TEST(test_id) \
-static struct test_result _test_##test_id(void); \
-__attribute__((constructor)) static void _testregister_##test_id(void) \
+static struct test_result test_case_##test_id(void); \
+__attribute__((constructor)) static void test_register_case_##test_id(void) \
 { \
-	test_register(__FILE__, #test_id, _test_##test_id); \
+	test_register_case(__FILE__, #test_id, test_case_##test_id); \
 } \
-static struct test_result _test_##test_id(void)
+static struct test_result test_case_##test_id(void)
 
 #define PASTE(a, b) a##b
 #define EXPAND_AND_PASTE(a, b) PASTE(a, b)
 
 #define BEFORE() \
-static struct test_result EXPAND_AND_PASTE(_before_all_, __LINE__)(void); \
-__attribute__((constructor)) static void EXPAND_AND_PASTE(_beforeregister_, __LINE__)(void) \
+static struct test_result EXPAND_AND_PASTE(test_before_, __LINE__)(void); \
+__attribute__((constructor)) static void EXPAND_AND_PASTE(test_register_setup_, __LINE__)(void) \
 { \
-	before_register(__FILE__, "BEFORE", EXPAND_AND_PASTE(_before_all_, __LINE__)); \
+	test_register_setup(__FILE__, "BEFORE", EXPAND_AND_PASTE(test_before_, __LINE__)); \
 } \
-static struct test_result EXPAND_AND_PASTE(_before_all_, __LINE__)(void)
+static struct test_result EXPAND_AND_PASTE(test_before_, __LINE__)(void)
 
 void *test_malloc(size_t size);
 
